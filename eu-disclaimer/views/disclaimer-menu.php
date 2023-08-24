@@ -2,10 +2,9 @@
 // Pour s'assurer qu'un utilisateur n'envoie pas un formulaire vide et effacer les données insérés par défaut dans la table
     if (!empty($_POST['message_disclaimer']) && !empty($_POST['redirection_ko'])) {
         $text = new DisclaimerOptions();
-        $text->setMessageDisclaimer($_POST['message_disclaimer']);
-        $text->setRedirectionKo($_POST['redirection_ko']);
-        DisclaimerTable::insertIntoTable($text->getMessageDisclaimer(), 
-                    $text->getRedirectionKo());
+        $text->setMessageDisclaimer(htmlspecialchars($_POST['message_disclaimer']));    // fonction PHP htmlspecialchars() permet de protéger votre formulaire contre la faille XSS
+        $text->setRedirectionKo(htmlspecialchars($_POST['redirection_ko']));
+        $message = DisclaimerTable::insertIntoTable($text);
 }
 ?>
 
@@ -14,7 +13,7 @@
 <h1>EU DISCLAIMER</h1>
 <br>
 <h2>Configuration</h2>
-<p></p>
+<p><?php if(isset($message)) echo $message; ?></p>
 <form action="" method="post" novalidate="novalidate">
     <table class="form-table">
         <tr>

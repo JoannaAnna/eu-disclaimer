@@ -54,15 +54,25 @@ class DisclaimerTable {
     }
 
     // On crée la requête pour mettre à jour les données saisies dans notre formulaire
-    static function insertIntoTable($content, $url) {
+    static function insertIntoTable(DisclaimerOptions $option) {
         // On utilise la variable globale : $wpdb
         global $wpdb;
-        $table_disclaimer = $wpdb->prefix.'disclaimer_options';
-        $sql = $wpdb->prepare(
+        // On ajoute un message de confirmation lors de l'insertion des valeurs dans notre formulaire après l'insertion en base de données pour guider l'utilisateur de notre module 
+        $message_user = '';
+        try {
+            $table_disclaimer = $wpdb->prefix.'disclaimer_options';
+            $sql = $wpdb->prepare(
             "UPDATE $table_disclaimer SET message_disclaimer = '%s', 
                 redirection_ko = '%s' WHERE id_disclaimer = %s", 
-                $content, $url, 1);
-        $wpdb->query($sql);
+                $option->getMessageDisclaimer(), $option->getRedirectionKo(), 1);
+            $wpdb->query($sql);
+            return $message_user = '<span style="color:green; font-size:16px;">
+                Les données ont correctement été mises à jour !</span>';
+        } catch (Exception $e) {
+            return $message_user = '<span style="color:red; font-size:16px;">
+                Une erreur est survenue !</span>';
+        }
+        
     }
 
     // On crée une fonction pour afficher le modal est son contenu
@@ -79,7 +89,7 @@ class DisclaimerTable {
         <div id="myModal" class="modal">
         <p>'. $message_disclaimer .'</p>
         <a href="'. $redirection_ko .'" type="button" class="btn-red">Non</a>
-        <a href="#" type="button" rel="modal:close" class="btn-green">Oui</a>
+        <a href="#" type="button" rel="modal:close" class="btn-green" id="yes">Oui</a>
         </div>
         ';
     }
