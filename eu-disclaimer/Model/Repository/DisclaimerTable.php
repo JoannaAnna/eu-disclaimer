@@ -88,8 +88,10 @@ class DisclaimerTable {
         return '
         <div id="myModal" class="modal">
         <p>'. $message_disclaimer .'</p>
-        <a href="'. $redirection_ko .'" type="button" class="btn-red">Non</a>
-        <a href="#" type="button" rel="modal:close" class="btn-green" id="yes">Oui</a>
+        <a href="'. $redirection_ko .'" type="button" class="btn-red">
+            Non, j\'ai moins de 18 ans</a>
+        <a href="#" type="button" rel="modal:close" class="btn-green" id="yes">
+            Oui, j\'ai 18 ans ou plus</a>
         </div>
         ';
     }
